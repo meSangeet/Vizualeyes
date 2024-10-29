@@ -42,13 +42,13 @@ const userSchema = new mongoose.Schema({
 // Hash password before saving - Or we can avoid this step HAHAHA
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 12);
+  this.password = this.password;
   next();
 });
 
 // Method to check if password is correct
 userSchema.methods.correctPassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+  return candidatePassword == this.password;
 };
 
 const User = mongoose.model('User', userSchema);
